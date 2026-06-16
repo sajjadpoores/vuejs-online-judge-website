@@ -9,7 +9,7 @@
                 </div>
                 <div class="full-width-on-mobile nav-item dropdown">
                     <span @click="show_dropdown"
-                    v-on-clickaway="close_dropdown"
+                    v-click-outside="close_dropdown"
                      class="dropbtn flex-container-to-center">
                         
                         <font-awesome-icon icon="caret-down" class="dropbtn dropbtni" />
@@ -112,11 +112,9 @@
 </template>
 
 <script>
-import { mixin as clickaway } from 'vue-clickaway'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: "Nav",
-    mixins: [ clickaway ],
     data() {
         return {
             mnav_drop_container: null,

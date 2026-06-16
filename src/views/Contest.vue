@@ -97,7 +97,7 @@
     <!-- contest table body -->
     <div class="p-body">
         <div class="p-row" v-for="(problem, index) in computeIndex" :key="problem.problemID">
-            <span class="p-thin-item">{{ index | getIndexByPage(page) }}</span>
+            <span class="p-thin-item">{{ getIndexByPage(index, page) }}</span>
 
             <span class="p-wide-item">
                 <router-link :to="problemLink(problem.problemID)"> {{ problem.name }}</router-link>
@@ -118,7 +118,7 @@
                     <font-awesome-icon icon="angle-right"></font-awesome-icon>
                 </div>
 
-                <div class="pagination-btn selected-number">{{ page | plus_one }}</div>
+                <div class="pagination-btn selected-number">{{ plus_one(page) }}</div>
                 <div class="pagination-btn pagination-arrow" @click="pervPage" :class="{disabled: page === 0}">
                     <font-awesome-icon icon="angle-left"></font-awesome-icon>
                 </div>
@@ -228,8 +228,6 @@ export default {
             var cid = this.$route.params.cid
             return `/contest/${cid}/problem/${id}`
         },
-    },
-    filters: {
         plus_one(index){
             return index + 1
         },

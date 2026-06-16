@@ -31,7 +31,7 @@
     <!-- contests table body -->
     <div class="p-body">
         <div class="p-row" v-for="(contest, index) in computeIndex" :key="contest.contestID">
-            <span class="p-thin-item">{{ index | getIndexByPage(page) }}</span>
+            <span class="p-thin-item">{{ getIndexByPage(index, page) }}</span>
 
             <span class="p-item">
                 <router-link :class="{ 'disabled-linkl': !userIsJoined(contest.contestID)}" :to="contestLink(contest.contestID)"> {{ contest.name }}</router-link>
@@ -58,7 +58,7 @@
                     <font-awesome-icon icon="angle-right"></font-awesome-icon>
                 </div>
 
-                <div class="pagination-btn selected-number">{{ page | plus_one }}</div>
+                <div class="pagination-btn selected-number">{{ plus_one(page) }}</div>
                 <div class="pagination-btn pagination-arrow" @click="pervPage" :class="{disabled: page === 0}">
                     <font-awesome-icon icon="angle-left"></font-awesome-icon>
                 </div>
@@ -161,6 +161,12 @@ export default {
             if (this.joined_contests.includes(id))
                 return true
             return false
+        },
+        plus_one(index){
+            return index + 1
+        },
+        getIndexByPage(index, page){
+            return page*5 + index + 1
         }
     },
     mounted() {
@@ -172,14 +178,6 @@ export default {
         else {
             var jwt = this.$cookie.get('auth')
             this.getContests('user')
-        }
-    },
-    filters: {
-        plus_one(index){
-            return index + 1
-        },
-        getIndexByPage(index, page){
-            return page*5 + index + 1
         }
     },
     watch: {

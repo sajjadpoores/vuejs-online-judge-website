@@ -1,7 +1,8 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import Cookies from 'js-cookie'
 
 import Multiselect from 'vue-multiselect'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -24,11 +25,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import VueCookie from 'vue-cookie'
+import VuePersianDatetimePicker from 'vue3-persian-datetime-picker'
 
-import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
+const app = createApp(App)
 
-Vue.use(VuePersianDatetimePicker, {
+// js-cookie-backed replacement for vue-cookie's global `$cookie`
+// (preserves the get/set/delete API used in component scripts and templates)
+app.config.globalProperties.$cookie = {
+  get: name => Cookies.get(name),
+  set: (name, value, expires) =>
+    expires ? Cookies.set(name, value, { expires }) : Cookies.set(name, value),
+  delete: name => Cookies.remove(name)
+}
+
+app.use(VuePersianDatetimePicker, {
   name: 'custom-date-picker',
   props: {
     inputFormat: 'YYYY-MM-DD HH:mm',
@@ -44,8 +54,6 @@ Vue.use(VuePersianDatetimePicker, {
     // ...
   }
 })
-
-Vue.use(VueCookie)
 
 library.add(faUser)
 library.add(faLock)
@@ -63,13 +71,27 @@ library.add(faCode)
 library.add(faSignOutAlt)
 library.add(faTrash)
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+app.component('font-awesome-icon', FontAwesomeIcon)
 // register multiselect
-Vue.component('multiselect', Multiselect)
+app.component('multiselect', Multiselect)
 
-Vue.config.productionTip = false
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+// replacement for vue-clickaway's v-on-clickaway directive
+app.directive('click-outside', {
+  beforeMount (el, binding) {
+    el.__clickOutsideHandler__ = event => {
+      if (!(el === event.target || el.contains(event.target))) {
+        binding.value(event)
+      }
+    }
+    setTimeout(() => {
+      document.documentElement.addEventListener('click', el.__clickOutsideHandler__, false)
+    }, 0)
+  },
+  unmounted (el) {
+    document.documentElement.removeEventListener('click', el.__clickOutsideHandler__, false)
+  }
+})
+
+app.use(router)
+app.use(store)
+app.mount('#app')

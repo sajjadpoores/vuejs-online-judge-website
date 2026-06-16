@@ -1,10 +1,8 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export default createStore({
   state: {
     backendUrl: 'http://178.22.122.251:3000',
     profileDetail: {
@@ -67,7 +65,7 @@ export default new Vuex.Store({
     },
     getProblems ({ commit }, type = 'all') {
       if (type === 'user') {
-        var jwt = Vue.cookie.get('auth')
+        var jwt = Cookies.get('auth')
         return axios
           .get(this.state.backendUrl + '/problem', {
             headers: {
@@ -104,7 +102,7 @@ export default new Vuex.Store({
     },
     getContests ({ commit }, type = 'all') {
       if (type === 'user') {
-        var jwt = Vue.cookie.get('auth')
+        var jwt = Cookies.get('auth')
         return axios
           .get(this.state.backendUrl + '/contest', {
             headers: {

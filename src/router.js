@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 import Home from './views/Home.vue'
 import MainView from './views/Main-view.vue'
 import NavRmenu from './views/Nav-rmenu.vue'
@@ -18,10 +18,8 @@ import ContestProblem from './views/Contest-problem.vue'
 import Test from './views/Test.vue'
 import store from './store'
 
-Vue.use(Router)
-const router = new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -120,16 +118,16 @@ function checkAuthentication (jwt) {
       // do nothing
     })
     .catch(error => {
-      if (error.response.status === 401) Vue.cookie.delete('auth')
+      if (error.response.status === 401) Cookies.remove('auth')
       router.push({ name: 'home' })
     })
 }
 
 router.beforeEach((to, from, next) => {
-  const jwt = Vue.cookie.get('auth')
+  const jwt = Cookies.get('auth')
 
   if (to.path === '/logout') {
-    Vue.cookie.delete('auth')
+    Cookies.remove('auth')
     router.push({ name: 'home' })
     return
   }

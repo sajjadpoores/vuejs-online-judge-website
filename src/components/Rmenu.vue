@@ -1,6 +1,6 @@
 <template>
       <!-- rightside menu **rmenu** -->
-        <div class="rmenu" id="rmenu" v-on-clickaway="close_rmenu">
+        <div class="rmenu" id="rmenu" v-click-outside="close_rmenu">
 
           <div id="rmenu-toggler-div" class="rmenu-open-btn" @click="show_rmenu">
                 <input id="rmenu-toggler-btn" type="checkbox" class="toggler">
@@ -45,13 +45,11 @@
 </template>
 
 <script>
-import { mixin as clickaway } from 'vue-clickaway'
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 
 export default {
     name: "Rmenu",
-    mixins: [ clickaway ],
     data() {
         return {
             rmenu: null,

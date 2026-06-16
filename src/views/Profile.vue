@@ -196,7 +196,6 @@
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 import router from '@/router.js'
-import { truncate } from 'fs';
 export default {
     name: "profile",
     data(){
